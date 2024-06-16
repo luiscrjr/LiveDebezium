@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+		<Configurations>Debug;Release;Debug Sender + Start Monitor</Configurations>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+		<OutputPath>..\binarios\</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Confluent.Kafka" Version="2.2.0" />
+	  <PackageReference Include="Google.Protobuf" Version="3.25.1" />
+	  <PackageReference Include="log4net" Version="2.0.17" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="Unity" Version="5.11.1" />
+	  <PackageReference Include="Unity.Interception" Version="5.9.2" />
+	  <PackageReference Include="Unity.Microsoft.DependencyInjection" Version="5.10.2" />
+	</ItemGroup>
+
+</Project>

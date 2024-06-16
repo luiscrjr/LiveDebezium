@@ -1,0 +1,120 @@
+version: '3'
+services:
+  kafka:
+    image: lucasmgjf/kafka_zookeeper:latest
+    container_name: kafka_zookeper
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    networks: 
+      - app-network
+    ports:
+      - 9092:9092
+    environment:
+      #CONFIGURAÇÂO DO KAFKA PARA ACEITAR CONEXÃO INTERNA(DOCKER) E EXTERNA
+      KAFKA_LISTENERS: LISTENER_INTERNAL://:29092,LISTENER_EXTERNAL://:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka:29092,LISTENER_EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    container_name: sqlserver
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    ports:
+      - 1433:1433
+    environment:
+      - MSSQL_AGENT_ENABLED=true
+      - MSSQL_PID=Standard
+      - MSSQL_SA_PASSWORD=1q2w3e4r@#
+      - ACCEPT_EULA=Y
+    networks:
+      - app-network
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 400M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    depends_on:
+      - kafka
+    ports:
+      - 8080:8080
+    environment:
+      DYNAMIC_CONFIG_ENABLED: false
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    networks: 
+      - app-network
+  #servidor de email para testes
+  smtp4dev:
+    image: rnwood/smtp4dev
+    container_name: smtp4dev
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+    ports:
+      - 3000:80
+      - 25:25
+      - 143:143
+    volumes:
+      - smtp4dev-data:/smtp4dev
+    #environment:
+      # Uncomment to customise these settings
+      #Specifies the virtual path from web server root where SMTP4DEV web interface will be hosted. e.g. "/" or "/smtp4dev"
+      #- ServerOptions__BasePath=/smtp4dev
+      #Specifies the server hostname. Used in auto-generated TLS certificate if enabled.
+      #- ServerOptions__HostName=smtp4dev
+      #Locks settings from being changed by user via web interface
+      #- ServerOptions__LockSettings=true
+      #Specifies the path where the database will be stored relative to APPDATA env var on Windows or XDG_CONFIG_HOME on non-Windows. Specify "" to use an in memory database.
+      #- ServerOptions__Database=database.db
+      #Specifies the number of messages to keep
+      #- ServerOptions__NumberOfMessagesToKeep=100
+      #Specifies the number of sessions to keep
+      #- ServerOptions__NumberOfSessionsToKeep=100
+      #Specifies the TLS mode to use. None=Off. StartTls=On demand if client supports STARTTLS. ImplicitTls=TLS as soon as connection is established.
+      #- ServerOptions__TlsMode=None
+      #Specifies the TLS certificate to use if TLS is enabled/requested. Specify "" to use an auto-generated self-signed certificate (then see console output on first startup)
+      #- ServerOptions__TlsCertificate=
+      #Sets the name of the SMTP server that will be used to relay messages or "" if messages should not be relayed
+      #- RelayOptions__SmtpServer=
+      #Sets the port number for the SMTP server used to relay messages.
+      #- RelayOptions__SmtpPort=25
+      #Specifies a comma separated list of recipient addresses for which messages will be relayed. An empty list means that no messages are relayed.
+      #- RelayOptions__AllowedEmailsString=
+      #Specifies the address used in MAIL FROM when relaying messages. (Sender address in message headers is left unmodified). The sender of each message is used if not specified.
+      #- RelayOptions__SenderAddress=
+      #The username for the SMTP server used to relay messages. If "" no authentication is attempted.
+      #- RelayOptions__Login=
+      #The password for the SMTP server used to relay messages
+      #- RelayOptions__Password=
+      #Specifies the port the IMAP server will listen on - allows standard email clients to view/retrieve messages
+      #"ServerOptions__ImapPort"=143
+volumes:
+  smtp4dev-data:
+networks:
+  app-network:
+    driver: bridge

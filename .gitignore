@@ -352,6 +352,8 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 
+.binaros/
+
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
 
@@ -396,3 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Ignoring binarios folder
+binarios/
