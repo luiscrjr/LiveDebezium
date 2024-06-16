@@ -1,0 +1,201 @@
+{
+	"info": {
+		"_postman_id": "e5e0b7ed-5d6b-4928-9cbc-1def5a48a4b7",
+		"name": "LiveDebezium",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8665282",
+		"_collection_link": "https://martian-spaceship-151715.postman.co/workspace/ONS~68f127ee-aa97-46dd-9b6a-b9aee2d4bc2c/collection/8665282-e5e0b7ed-5d6b-4928-9cbc-1def5a48a4b7?action=share&source=collection_link&creator=8665282"
+	},
+	"item": [
+		{
+			"name": "LiveDebezium_CreateSourceConector",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"source-mssql-poc_debezium-cliente\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"database.instance\": \"sqlserver\",\r\n    \"database.port\": \"1433\",\r\n    \"database.user\": \"sa\",\r\n    \"database.password\": \"senh@PocD3bezium\",\r\n    \"database.encrypt\": \"false\",\r\n    \"database.time_zone\": \"UTC\",\r\n    \"database.hostname\": \"sqlserver\",\r\n    \"database.names\": \"poc_debezium\",\r\n    \"database.server.name\": \"sqlserver\",\r\n    \"topic.prefix\": \"debezium\",\r\n    \"schema.history.internal.kafka.bootstrap.servers\":\"kafka:9092\",\r\n    \"schema.history.internal.kafka.topic\":\"dbhistory.debezium\",\r\n    \"table.include.list\": \"dbo.cliente\",\r\n    \"snapshot.mode\":\"schema_only\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LiveDebezium_CreateSyncConector",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"sync-mssql-poc_debezium-userdata2\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.debezium.connector.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"connection.url\": \"jdbc:sqlserver://sqlserver:1433;databaseName=poc_debezium_destino;encrypt=false\",\r\n    \"connection.username\": \"sa\",\r\n    \"connection.password\": \"senh@PocD3bezium\",\r\n    \"topics\": \"debezium.poc_debezium.dbo.userdata\",\r\n    \"insert.mode\": \"upsert\",\r\n    \"delete.enabled\": true,\r\n    \"primary.key.mode\": \"record_key\",\r\n    \"primary.key.fields\": \"ID\",\r\n    \"schema.evolution\": \"basic\",\r\n    \"database.time_zone\": \"UTC\",\r\n    \"auto.create\": \"true\",\r\n    \"db.name\": \"poc_debezium_destino\",\r\n    \"transforms\": \"dropPrefix\",\r\n    \"transforms.dropPrefix.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\r\n    \"transforms.dropPrefix.regex\": \"debezium.poc_debezium.dbo.(.*)\",\r\n    \"transforms.dropPrefix.replacement\": \"$1\",\r\n    \"table.name.format\":\"${topic}\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RequestStatus",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"sync-mssql-poc_debezium-userdata2\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.debezium.connector.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"connection.url\": \"jdbc:sqlserver://sqlserver:1433;databaseName=poc_debezium_destino;encrypt=false\",\r\n    \"connection.username\": \"sa\",\r\n    \"connection.password\": \"senh@PocD3bezium\",\r\n    \"topics\": \"debezium.poc_debezium.dbo.userdata\",\r\n    \"insert.mode\": \"upsert\",\r\n    \"delete.enabled\": true,\r\n    \"primary.key.mode\": \"record_key\",\r\n    \"primary.key.fields\": \"ID\",\r\n    \"schema.evolution\": \"basic\",\r\n    \"database.time_zone\": \"UTC\",\r\n    \"auto.create\": \"true\",\r\n    \"db.name\": \"poc_debezium_destino\",\r\n    \"transforms\": \"dropPrefix\",\r\n    \"transforms.dropPrefix.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\r\n    \"transforms.dropPrefix.regex\": \"debezium.poc_debezium.dbo.(.*)\",\r\n    \"transforms.dropPrefix.replacement\": \"$1\",\r\n    \"table.name.format\":\"${topic}\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/sync-mssql-poc_debezium-cliente/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"sync-mssql-poc_debezium-cliente",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PauseConnector",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"sync-mssql-poc_debezium-userdata2\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.debezium.connector.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"connection.url\": \"jdbc:sqlserver://sqlserver:1433;databaseName=poc_debezium_destino;encrypt=false\",\r\n    \"connection.username\": \"sa\",\r\n    \"connection.password\": \"senh@PocD3bezium\",\r\n    \"topics\": \"debezium.poc_debezium.dbo.userdata\",\r\n    \"insert.mode\": \"upsert\",\r\n    \"delete.enabled\": true,\r\n    \"primary.key.mode\": \"record_key\",\r\n    \"primary.key.fields\": \"ID\",\r\n    \"schema.evolution\": \"basic\",\r\n    \"database.time_zone\": \"UTC\",\r\n    \"auto.create\": \"true\",\r\n    \"db.name\": \"poc_debezium_destino\",\r\n    \"transforms\": \"dropPrefix\",\r\n    \"transforms.dropPrefix.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\r\n    \"transforms.dropPrefix.regex\": \"debezium.poc_debezium.dbo.(.*)\",\r\n    \"transforms.dropPrefix.replacement\": \"$1\",\r\n    \"table.name.format\":\"${topic}\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/sync-mssql-poc_debezium-cliente/pause",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"sync-mssql-poc_debezium-cliente",
+						"pause"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResumeConnector",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"sync-mssql-poc_debezium-userdata2\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.debezium.connector.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"connection.url\": \"jdbc:sqlserver://sqlserver:1433;databaseName=poc_debezium_destino;encrypt=false\",\r\n    \"connection.username\": \"sa\",\r\n    \"connection.password\": \"senh@PocD3bezium\",\r\n    \"topics\": \"debezium.poc_debezium.dbo.userdata\",\r\n    \"insert.mode\": \"upsert\",\r\n    \"delete.enabled\": true,\r\n    \"primary.key.mode\": \"record_key\",\r\n    \"primary.key.fields\": \"ID\",\r\n    \"schema.evolution\": \"basic\",\r\n    \"database.time_zone\": \"UTC\",\r\n    \"auto.create\": \"true\",\r\n    \"db.name\": \"poc_debezium_destino\",\r\n    \"transforms\": \"dropPrefix\",\r\n    \"transforms.dropPrefix.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\r\n    \"transforms.dropPrefix.regex\": \"debezium.poc_debezium.dbo.(.*)\",\r\n    \"transforms.dropPrefix.replacement\": \"$1\",\r\n    \"table.name.format\":\"${topic}\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/sync-mssql-poc_debezium-cliente/resume",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"sync-mssql-poc_debezium-cliente",
+						"resume"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RestartTasksConnector",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"sync-mssql-poc_debezium-userdata2\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.debezium.connector.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"connection.url\": \"jdbc:sqlserver://sqlserver:1433;databaseName=poc_debezium_destino;encrypt=false\",\r\n    \"connection.username\": \"sa\",\r\n    \"connection.password\": \"senh@PocD3bezium\",\r\n    \"topics\": \"debezium.poc_debezium.dbo.userdata\",\r\n    \"insert.mode\": \"upsert\",\r\n    \"delete.enabled\": true,\r\n    \"primary.key.mode\": \"record_key\",\r\n    \"primary.key.fields\": \"ID\",\r\n    \"schema.evolution\": \"basic\",\r\n    \"database.time_zone\": \"UTC\",\r\n    \"auto.create\": \"true\",\r\n    \"db.name\": \"poc_debezium_destino\",\r\n    \"transforms\": \"dropPrefix\",\r\n    \"transforms.dropPrefix.type\": \"org.apache.kafka.connect.transforms.RegexRouter\",\r\n    \"transforms.dropPrefix.regex\": \"debezium.poc_debezium.dbo.(.*)\",\r\n    \"transforms.dropPrefix.replacement\": \"$1\",\r\n    \"table.name.format\":\"${topic}\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/sync-mssql-poc_debezium-cliente/restart?includeTasks=true&onlyFailed=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"sync-mssql-poc_debezium-cliente",
+						"restart"
+					],
+					"query": [
+						{
+							"key": "includeTasks",
+							"value": "true"
+						},
+						{
+							"key": "onlyFailed",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
