@@ -1,18 +1,11 @@
+CREATE DATABASE poc_debezium
+CREATE DATABASE poc_debezium_destino
+
 use poc_debezium
 
 EXEC sys.sp_cdc_enable_db;
 
-select * from sys.databases where is_cdc_enabled = 1;
-
-EXEC sys.sp_cdc_enable_table
-
-     @source_schema = 'dbo',
-
-     @source_name   = 'userdata',
-
-     @role_name     = 'sa';
-
-	 CREATE TABLE userdata (
+CREATE TABLE userdata (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     Name NVARCHAR(100) NOT NULL,
     BirthDate DATE,
@@ -25,10 +18,21 @@ EXEC sys.sp_cdc_enable_table
     Rating FLOAT
 );
 
+
+EXEC sys.sp_cdc_enable_table
+
+     @source_schema = 'dbo',
+
+     @source_name   = 'userdata',
+
+     @role_name     = 'sa';
+
+
 SELECT * FROM sys.tables WHERE is_tracked_by_cdc = 1;
 
 
-	-- Usando um loop para inserir 1000 registros fictícios
+--loop para inserir registros na userdata
+
 DECLARE @i INT = 12;
 WHILE @i <= 14
 BEGIN
@@ -45,15 +49,4 @@ BEGIN
     );
     SET @i = @i + 1;
 END
-
-
-	 ALTER TABLE Cliente
-ADD CONSTRAINT PK_Cliente_ClienteID PRIMARY KEY (id);
-
-ALTER TABLE Cliente
-ALTER COLUMN id INT NOT NULL;
-
-
-
-
 
