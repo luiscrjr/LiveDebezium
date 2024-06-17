@@ -10,12 +10,12 @@ App Writer é uma aplicação projetada para consumir logs de Change Data Captur
 
 ## Configuração
 
-Configure as variáveis de ambiente:
-TopicosTabelaKafka: lista de tópicos a serem consumidos
-TipoBancoDestino: SqlServer
-TipoPayload: Debezium
-PodGuid: guid gerado manualmente para permitir consumo paralelo no kafka
-Kafka_BootstrapServers: endereço do seu kafka
+Configure as variáveis de ambiente => 
+TopicosTabelaKafka: lista de tópicos a serem consumidos,
+TipoBancoDestino: SqlServer,
+TipoPayload: Debezium,
+PodGuid: guid gerado manualmente para permitir consumo paralelo no kafka,
+Kafka_BootstrapServers: endereço do seu kafka,
 ConString: connectionString para SqlServer
 
 
