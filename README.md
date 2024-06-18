@@ -1,3 +1,5 @@
+![banner](./Docs/Luis-Vinicius-banner.png)
+
 # App Writer
 
 App Writer é uma aplicação projetada para consumir logs de Change Data Capture (CDC) gerados pelo Debezium a partir de um tópico do Kafka e persistir esses dados na base de dados de destino.
@@ -11,12 +13,12 @@ App Writer é uma aplicação projetada para consumir logs de Change Data Captur
 ## Configuração
 
 Configure as variáveis de ambiente => 
-TopicosTabelaKafka: lista de tópicos a serem consumidos,
-TipoBancoDestino: SqlServer,
-TipoPayload: Debezium,
-PodGuid: guid gerado manualmente para permitir consumo paralelo no kafka,
-Kafka_BootstrapServers: endereço do seu kafka,
-ConString: connectionString para SqlServer
+* TopicosTabelaKafka: lista de tópicos a serem consumidos;
+* TipoBancoDestino: SqlServer;
+* TipoPayload: Debezium;
+* PodGuid: guid gerado manualmente para permitir consumo paralelo no kafka;
+* Kafka_BootstrapServers: endereço do seu kafka;
+* ConString: connectionString para SqlServer
 
 
 ## Instalação
@@ -28,7 +30,7 @@ ConString: connectionString para SqlServer
 2. Navegue até o diretório do projeto e execute o projeto:
     ```sh
     cd AppWriter
-
+    ```
     
 ## Resultado
 Avalie as saídas no console para visualizar as mensagens recebidas e persistências realizadas.
